@@ -14,6 +14,6 @@ namespace ProjectManagement.ViewModels
         public DateTime CreationDate { get; set; }
         public DateTime? TaskDeadline { get; set; }
 
-        public List<TaskCategoryViewModel>? TaskCategories { get; set; }
+        public List<TaskCategoryInfoViewModel>? TaskCategories { get; set; }
     }
 }

@@ -34,14 +34,15 @@ namespace ProjectManagement.Controllers
                     Id = e.Task.Id,
                     Description = e.Task.Description,
                     TaskDeadline = e.Task.TaskDeadline,
-                    TaskCategories = e.Task.TaskCategories.Select(x => new List<TaskCategoryViewModel>()
+                    TaskCategories = e.Task.TaskCategories.Select(x => new List<TaskCategoryInfoViewModel>()
                     {
-                        new TaskCategoryViewModel()
+                        new TaskCategoryInfoViewModel()
                         {
-                            Category = x.Category,
                             CategoryId = x.CategoryId,
+                            CategroyTitle = x.Category.Title,
                             Id = x.Id,
                             TaskId = x.TaskId,
+                            TaskTitle = x.Task.Title
                         }
                     }).FirstOrDefault()
                 },
@@ -51,7 +52,7 @@ namespace ProjectManagement.Controllers
                     LastName = e.User.LastName,
                     UserName = e.User.UserName
                 }
-                
+
             }).ToList();
         }
 
@@ -67,17 +68,18 @@ namespace ProjectManagement.Controllers
                     Id = e.Task.Id,
                     Description = e.Task.Description,
                     TaskDeadline = e.Task.TaskDeadline,
-                    TaskCategories = e.Task.TaskCategories.Select(x => new List<TaskCategoryViewModel>()
+                    TaskCategories = e.Task.TaskCategories.Select(x => new List<TaskCategoryInfoViewModel>()
                     {
-                        new TaskCategoryViewModel()
+                        new TaskCategoryInfoViewModel()
                         {
-                            Category = x.Category,
                             CategoryId = x.CategoryId,
+                            CategroyTitle = x.Category.Title,
                             Id = x.Id,
                             TaskId = x.TaskId,
+                            TaskTitle = x.Task.Title
                         }
                     }).FirstOrDefault()
-            
+
                 },
                 User = new UserInfoViewModel()
                 {
@@ -113,7 +115,7 @@ namespace ProjectManagement.Controllers
                 await db.SaveChangesAsync();
                 return Ok(userTask);
             }
-            catch (Exception ex )
+            catch (Exception ex)
             {
                 return Content(ex.Message);
             }
@@ -147,7 +149,7 @@ namespace ProjectManagement.Controllers
             var currentUserTask = await db.UserTasks.FindAsync(id);
             if (currentUserTask is null)
             {
-                return BadRequest(); 
+                return BadRequest();
             }
             try
             {

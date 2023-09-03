@@ -27,14 +27,15 @@ namespace ProjectManagement.Controllers
             {
                 CreationDate = t.CreationDate,
                 Description = t.Description,
-                TaskCategories = t.TaskCategories.Select(x => new List<TaskCategoryViewModel>()
+                TaskCategories = t.TaskCategories.Select(x => new List<TaskCategoryInfoViewModel>()
                     {
-                        new TaskCategoryViewModel()
+                        new TaskCategoryInfoViewModel()
                         {
-                            Category = x.Category,
                             CategoryId = x.CategoryId,
+                            CategroyTitle = x.Category.Title,
                             Id = x.Id,
                             TaskId = x.TaskId,
+                            TaskTitle = x.Task.Title
                         }
                     }).FirstOrDefault(),
                 TaskDeadline = t.TaskDeadline,
@@ -60,17 +61,17 @@ namespace ProjectManagement.Controllers
                  CreationDate = currentTask.CreationDate,
                  Description = currentTask.Description,
                  TaskDeadline = currentTask.TaskDeadline,
-                 TaskCategories = currentTask.TaskCategories.Select(x => new List<TaskCategoryViewModel>()
+                 TaskCategories = currentTask.TaskCategories.Select(x => new List<TaskCategoryInfoViewModel>()
                     {
-                        new TaskCategoryViewModel()
+                        new TaskCategoryInfoViewModel()
                         {
-                            Category = x.Category,
                             CategoryId = x.CategoryId,
+                            CategroyTitle = x.Category.Title,
                             Id = x.Id,
                             TaskId = x.TaskId,
+                            TaskTitle = x.Task.Title
                         }
                     }).FirstOrDefault(),
-
              });
         }
 

@@ -14,6 +14,7 @@ namespace DB.Entity
         public int Id { get; set; }
         [Required]
         public int TaskId { get; set; }
+        public ProjectTask? Task { get; set; }
 
         [Required]
         public int CategoryId { get; set; }
