@@ -18,8 +18,20 @@ builder.Services.AddControllersWithViews()
 );
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer("server=(localdb)\\MSSQLLocalDB;database=ProjectManagement;Trusted_Connection=true"));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+        });
+});
 
 var app = builder.Build();
+app.UseCors("AllowAll");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
