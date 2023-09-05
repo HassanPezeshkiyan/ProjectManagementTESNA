@@ -15,5 +15,6 @@ namespace ProjectManagement.ViewModels
         public DateTime? TaskDeadline { get; set; }
 
         public List<TaskCategoryInfoViewModel>? TaskCategories { get; set; }
+        public List<UserInfoViewModel>? TaskUsers { get; set; }
     }
 }

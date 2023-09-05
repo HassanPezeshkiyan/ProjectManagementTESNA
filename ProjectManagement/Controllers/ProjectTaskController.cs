@@ -23,7 +23,7 @@ namespace ProjectManagement.Controllers
         [HttpGet]
         public List<TaskListViewModel> GetTasks()
         {
-            return db.Tasks.Include(e => e.TaskCategories).ThenInclude(x => x.Category).Select(t => new TaskListViewModel()
+            return db.Tasks.Include(e => e.TaskUsers).Include(e => e.TaskCategories).ThenInclude(x => x.Category).Select(t => new TaskListViewModel()
             {
                 Id = t.Id,
                 Title = t.Title,
@@ -31,23 +31,33 @@ namespace ProjectManagement.Controllers
                 CreationDate = t.CreationDate,
                 TaskDeadline = t.TaskDeadline,
                 TaskCategories = t.TaskCategories.Select(x => new List<TaskCategoryInfoViewModel>()
+                {
+                    new TaskCategoryInfoViewModel()
                     {
-                        new TaskCategoryInfoViewModel()
-                        {
-                            CategoryId = x.CategoryId,
-                            CategroyTitle = x.Category.Title,
-                            Id = x.Id,
-                            TaskId = x.TaskId,
-                            TaskTitle = x.Task.Title
-                        }
-                    }).FirstOrDefault(),
+                        CategoryId = x.CategoryId,
+                        CategroyTitle = x.Category.Title,
+                        Id = x.Id,
+                        TaskId = x.TaskId,
+                        TaskTitle = x.Task.Title
+                    }
+                }).FirstOrDefault(),
+                TaskUsers = t.TaskUsers.Select(x => new List<UserInfoViewModel>()
+                {
+                    new UserInfoViewModel()
+                    {
+                        Id = x.User.Id,
+                        FirstName = x.User.FirstName,
+                        LastName = x.User.LastName,
+                        UserName = x.User.UserName,
+                    }
+                }).FirstOrDefault()
             }).ToList();
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTask(int id)
         {
-            var currentTask = await db.Tasks.Include(e => e.TaskCategories).ThenInclude(x => x.Category).Where(e => e.Id == id).FirstOrDefaultAsync();
+            var currentTask = await db.Tasks.Include(e => e.TaskUsers).ThenInclude(e => e.User).Include(e => e.TaskCategories).ThenInclude(x => x.Category).Where(e => e.Id == id).FirstOrDefaultAsync();
             if (currentTask == null)
             {
                 return NotFound();
@@ -71,6 +81,16 @@ namespace ProjectManagement.Controllers
                             TaskTitle = x.Task.Title
                         }
                     }).FirstOrDefault(),
+                 TaskUsers = currentTask.TaskUsers.Select(x => new List<UserInfoViewModel>()
+                {
+                    new UserInfoViewModel()
+                    {
+                        Id = x.User.Id,
+                        FirstName = x.User.FirstName,
+                        LastName = x.User.LastName,
+                        UserName = x.User.UserName,
+                    }
+                }).FirstOrDefault()
              });
         }
 
