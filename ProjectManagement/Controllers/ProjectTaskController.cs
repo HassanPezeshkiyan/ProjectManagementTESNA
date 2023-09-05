@@ -95,31 +95,35 @@ namespace ProjectManagement.Controllers
                 };
                 db.Tasks.Add(task);
                 await db.SaveChangesAsync();
-
-                foreach (var item in vm.TaskCategoryIds)
+                if (vm.TaskCategoryIds is not null && vm.TaskCategoryIds.Count > 0)
                 {
-                    var newTaksCategories = new TaskCategory()
+                    foreach (var item in vm.TaskCategoryIds)
                     {
-                        CategoryId = item,
-                        TaskId = task.Id
-                    };
-                    await db.TaskCategories.AddAsync(newTaksCategories);
-                    await db.SaveChangesAsync();
-                    taskCategoriesList.Add(newTaksCategories);
+                        var newTaksCategories = new TaskCategory()
+                        {
+                            CategoryId = item,
+                            TaskId = task.Id
+                        };
+                        await db.TaskCategories.AddAsync(newTaksCategories);
+                        await db.SaveChangesAsync();
+                        taskCategoriesList.Add(newTaksCategories);
 
+                    }
                 }
-
-                foreach (var item in vm.TaskUserIds)
+                if (vm.TaskUserIds is not null && vm.TaskUserIds.Count > 0)
                 {
-                    var newUserTask = new UserTask()
+                    foreach (var item in vm.TaskUserIds)
                     {
-                        UserId = item,
-                        CreationDate = DateTime.Now,
-                        TaskStatus = false,
-                        TaskId = task.Id,
-                    };
-                    await db.UserTasks.AddAsync(newUserTask);
-                    await db.SaveChangesAsync();
+                        var newUserTask = new UserTask()
+                        {
+                            UserId = item,
+                            CreationDate = DateTime.Now,
+                            TaskStatus = false,
+                            TaskId = task.Id,
+                        };
+                        await db.UserTasks.AddAsync(newUserTask);
+                        await db.SaveChangesAsync();
+                    }
                 }
                 task.TaskCategories = taskCategoriesList;
                 await db.SaveChangesAsync();
@@ -156,28 +160,34 @@ namespace ProjectManagement.Controllers
                 }
                 List<TaskCategory> taskCategoriesList = new List<TaskCategory>();
                 await db.SaveChangesAsync();
-                foreach (var item in vm.TaskCategoryIds)
+                if (vm.TaskCategoryIds is not null && vm.TaskCategoryIds.Count > 0)
                 {
-                    var newTaksCategories = new TaskCategory()
+                    foreach (var item in vm.TaskCategoryIds)
                     {
-                        CategoryId = item,
-                        TaskId = currentTask.Id
-                    };
-                    await db.TaskCategories.AddAsync(newTaksCategories);
-                    await db.SaveChangesAsync();
-                    taskCategoriesList.Add(newTaksCategories);
+                        var newTaksCategories = new TaskCategory()
+                        {
+                            CategoryId = item,
+                            TaskId = currentTask.Id
+                        };
+                        await db.TaskCategories.AddAsync(newTaksCategories);
+                        await db.SaveChangesAsync();
+                        taskCategoriesList.Add(newTaksCategories);
+                    }
                 }
-                foreach (var item in vm.TaskUserIds)
+                if (vm.TaskUserIds is not null && vm.TaskUserIds.Count > 0)
                 {
-                    var newUserTask = new UserTask()
+                    foreach (var item in vm.TaskUserIds)
                     {
-                        UserId = item,
-                        CreationDate = DateTime.Now,
-                        TaskStatus = false,
-                        TaskId = currentTask.Id,
-                    };
-                    await db.UserTasks.AddAsync(newUserTask);
-                    await db.SaveChangesAsync();
+                        var newUserTask = new UserTask()
+                        {
+                            UserId = item,
+                            CreationDate = DateTime.Now,
+                            TaskStatus = false,
+                            TaskId = currentTask.Id,
+                        };
+                        await db.UserTasks.AddAsync(newUserTask);
+                        await db.SaveChangesAsync();
+                    }
                 }
                 currentTask.Title = vm.Title ?? currentTask.Title;
                 currentTask.Description = vm.Description ?? currentTask.Description;
