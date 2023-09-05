@@ -5,8 +5,8 @@ public class UserTaskListViewModel
 {
     public int Id { get; set; }
 
-    [Required]
-    public UserInfoViewModel? User { get; set; }
+    //[Required]
+    //public UserInfoViewModel? User { get; set; }
 
     [Required]
     public TaskListViewModel? Task { get; set; }

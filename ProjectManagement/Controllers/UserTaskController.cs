@@ -21,12 +21,12 @@ namespace ProjectManagement.Controllers
         [HttpGet]
         public List<UserTaskListViewModel> GetAllUserTasks()
         {
-            return db.UserTasks.Include(e => e.User).Include(e => e.Task).Select(e => new UserTaskListViewModel()
+            return db.UserTasks.Include(e => e.Task).ThenInclude(e => e.TaskUsers).Include(e => e.Task.TaskCategories).Select(e => new UserTaskListViewModel()
             {
-                CreationDate = e.CreationDate,
                 Id = e.Id,
-                ModifiedDate = e.ModifiedDate,
                 TaskStatus = e.TaskStatus,
+                CreationDate = e.CreationDate,
+                ModifiedDate = e.ModifiedDate,
                 Task = new TaskListViewModel()
                 {
                     Title = e.Task.Title,
@@ -44,15 +44,15 @@ namespace ProjectManagement.Controllers
                             TaskId = x.TaskId,
                             TaskTitle = x.Task.Title
                         }
-                    }).FirstOrDefault()
+                    }).FirstOrDefault(),
+                    TaskUsers = e.Task.TaskUsers.Select(x => new UserInfoViewModel()
+                    {
+                        Id = e.User.Id,
+                        FirstName = e.User.FirstName,
+                        LastName = e.User.LastName,
+                        UserName = e.User.UserName,
+                    }).ToList(),
                 },
-                User = new UserInfoViewModel()
-                {
-                    Id = e.User.Id,
-                    FirstName = e.User.FirstName,
-                    LastName = e.User.LastName,
-                    UserName = e.User.UserName
-                }
 
             }).ToList();
         }
@@ -60,8 +60,12 @@ namespace ProjectManagement.Controllers
         [HttpGet("{id}")]
         public List<UserTaskListViewModel> GetUserTask(int id)
         {
-            return db.UserTasks.Include(e => e.User).Include(e => e.Task).Include(e => e.Task.TaskCategories).Where(e => e.UserId == id).Select(e => new UserTaskListViewModel()
+            return db.UserTasks.Include(e => e.Task).ThenInclude(e => e.TaskUsers).Include(e => e.Task.TaskCategories).Where(e => e.UserId == id).Select(e => new UserTaskListViewModel()
             {
+                Id = e.Id,
+                TaskStatus = e.TaskStatus,
+                CreationDate = e.CreationDate,
+                ModifiedDate = e.ModifiedDate,
                 Task = new TaskListViewModel()
                 {
                     Title = e.Task.Title,
@@ -79,21 +83,15 @@ namespace ProjectManagement.Controllers
                             TaskId = x.TaskId,
                             TaskTitle = x.Task.Title
                         }
-                    }).FirstOrDefault()
-
+                    }).FirstOrDefault(),
+                    TaskUsers = e.Task.TaskUsers.Select(x => new UserInfoViewModel()
+                    {
+                        Id = e.User.Id,
+                        FirstName = e.User.FirstName,
+                        LastName = e.User.LastName,
+                        UserName = e.User.UserName,
+                    }).ToList(),
                 },
-                User = new UserInfoViewModel()
-                {
-                    Id = e.User.Id,
-                    FirstName = e.User.FirstName,
-                    LastName = e.User.LastName,
-                    UserName = e.User.UserName
-                }
-                ,
-                TaskStatus = e.TaskStatus,
-                CreationDate = e.CreationDate,
-                Id = e.Id,
-                ModifiedDate = e.ModifiedDate
             }).ToList();
         }
 
