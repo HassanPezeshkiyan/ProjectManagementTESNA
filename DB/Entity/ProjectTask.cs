@@ -19,11 +19,10 @@ namespace DB.Entity
         [Required]
         public DateTime CreationDate { get; set; }
         public DateTime? TaskDeadline { get; set; }
-        
 
 
-        public ICollection<TaskCategory> TaskCategories{ get; set; }
-
+        public ICollection<TaskCategory>? TaskCategories { get; set; }
+        public ICollection<UserTask>? TaskUsers { get; set; }
 
     }
 }

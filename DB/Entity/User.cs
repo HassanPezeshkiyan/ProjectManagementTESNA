@@ -22,6 +22,6 @@ namespace DB.Entity
         public string Password { get; set; }
 
 
-        public ICollection<UserTask> UserTasks{ get; set; }
+        public ICollection<UserTask>? UserTasks{ get; set; }
     }
 }

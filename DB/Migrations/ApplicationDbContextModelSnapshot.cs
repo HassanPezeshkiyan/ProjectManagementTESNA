@@ -144,7 +144,7 @@ namespace DB.Migrations
                     b.Property<int>("TaskId")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("TaskStatus")
+                    b.Property<bool>("TaskStatus")
                         .HasColumnType("bit");
 
                     b.Property<int>("UserId")
@@ -192,7 +192,7 @@ namespace DB.Migrations
             modelBuilder.Entity("DB.Entity.UserTask", b =>
                 {
                     b.HasOne("DB.Entity.ProjectTask", "Task")
-                        .WithMany()
+                        .WithMany("TaskUsers")
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -216,6 +216,8 @@ namespace DB.Migrations
             modelBuilder.Entity("DB.Entity.ProjectTask", b =>
                 {
                     b.Navigation("TaskCategories");
+
+                    b.Navigation("TaskUsers");
                 });
 
             modelBuilder.Entity("DB.Entity.User", b =>

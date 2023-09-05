@@ -25,8 +25,11 @@ namespace ProjectManagement.Controllers
         {
             return db.Tasks.Include(e => e.TaskCategories).ThenInclude(x => x.Category).Select(t => new TaskListViewModel()
             {
-                CreationDate = t.CreationDate,
+                Id = t.Id,
+                Title = t.Title,
                 Description = t.Description,
+                CreationDate = t.CreationDate,
+                TaskDeadline = t.TaskDeadline,
                 TaskCategories = t.TaskCategories.Select(x => new List<TaskCategoryInfoViewModel>()
                     {
                         new TaskCategoryInfoViewModel()
@@ -38,11 +41,7 @@ namespace ProjectManagement.Controllers
                             TaskTitle = x.Task.Title
                         }
                     }).FirstOrDefault(),
-                TaskDeadline = t.TaskDeadline,
-                Title = t.Title,
-                Id = t.Id
             }).ToList();
-
         }
 
         [HttpGet("{id}")]
@@ -102,7 +101,7 @@ namespace ProjectManagement.Controllers
                         var newTaksCategories = new TaskCategory()
                         {
                             CategoryId = item,
-                            TaskId = task.Id
+                            Task = task
                         };
                         await db.TaskCategories.AddAsync(newTaksCategories);
                         await db.SaveChangesAsync();
@@ -119,13 +118,12 @@ namespace ProjectManagement.Controllers
                             UserId = item,
                             CreationDate = DateTime.Now,
                             TaskStatus = false,
-                            TaskId = task.Id,
+                            Task = task
                         };
                         await db.UserTasks.AddAsync(newUserTask);
                         await db.SaveChangesAsync();
                     }
                 }
-                task.TaskCategories = taskCategoriesList;
                 await db.SaveChangesAsync();
                 await db.Database.CommitTransactionAsync();
                 return Ok(task);
@@ -148,17 +146,16 @@ namespace ProjectManagement.Controllers
             try
             {
                 await db.Database.BeginTransactionAsync();
-                if (vm.TaskCategoryIds.Count > 0)
+                if (vm.TaskCategoryIds != null && vm.TaskCategoryIds.Count > 0)
                 {
                     var taskCategories = db.TaskCategories.Where(c => c.TaskId == vm.Id).ToList();
                     db.RemoveRange(taskCategories);
                 }
-                if (vm.TaskUserIds.Count > 0)
+                if (vm.TaskUserIds != null && vm.TaskUserIds.Count > 0)
                 {
                     var taskUserIds = db.UserTasks.Where(c => c.TaskId == vm.Id).ToList();
                     db.RemoveRange(taskUserIds);
                 }
-                List<TaskCategory> taskCategoriesList = new List<TaskCategory>();
                 await db.SaveChangesAsync();
                 if (vm.TaskCategoryIds is not null && vm.TaskCategoryIds.Count > 0)
                 {
@@ -167,11 +164,10 @@ namespace ProjectManagement.Controllers
                         var newTaksCategories = new TaskCategory()
                         {
                             CategoryId = item,
-                            TaskId = currentTask.Id
+                            Task = currentTask
                         };
                         await db.TaskCategories.AddAsync(newTaksCategories);
                         await db.SaveChangesAsync();
-                        taskCategoriesList.Add(newTaksCategories);
                     }
                 }
                 if (vm.TaskUserIds is not null && vm.TaskUserIds.Count > 0)
@@ -183,7 +179,7 @@ namespace ProjectManagement.Controllers
                             UserId = item,
                             CreationDate = DateTime.Now,
                             TaskStatus = false,
-                            TaskId = currentTask.Id,
+                            Task = currentTask,
                         };
                         await db.UserTasks.AddAsync(newUserTask);
                         await db.SaveChangesAsync();
@@ -192,7 +188,6 @@ namespace ProjectManagement.Controllers
                 currentTask.Title = vm.Title ?? currentTask.Title;
                 currentTask.Description = vm.Description ?? currentTask.Description;
                 currentTask.TaskDeadline = vm.TaskDeadline ?? currentTask.TaskDeadline;
-                currentTask.TaskCategories = taskCategoriesList ?? currentTask.TaskCategories;
                 db.Tasks.Update(currentTask);
                 await db.SaveChangesAsync();
                 await db.Database.CommitTransactionAsync();

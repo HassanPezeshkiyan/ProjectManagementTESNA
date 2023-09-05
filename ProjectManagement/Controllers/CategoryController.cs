@@ -19,15 +19,21 @@ namespace ProjectManagement.Controllers
             this.db = db;
         }
         [HttpGet]
-        public List<CategoryViewModel> GetCategories()
+        public List<CategoryListViewModel> GetCategories()
         {
-            return db.Categories.Include(e => e.Creator).Select(e => new CategoryViewModel
+            return db.Categories.Include(e => e.Creator).Select(e => new CategoryListViewModel
             {
                 UserId = e.UserId,
                 Title = e.Title,
                 Description = e.Description,
                 Id = e.Id,
-                UserFullName = e.Creator.FirstName + " " + e.Creator.LastName,
+                Creator = new UserInfoViewModel()
+                {
+                    Id = e.Creator.Id,
+                    FirstName = e.Creator.FirstName,
+                    LastName = e.Creator.LastName,
+                    UserName = e.Creator.UserName,
+                }
             }).ToList();
         }
 
@@ -39,13 +45,19 @@ namespace ProjectManagement.Controllers
             {
                 return NotFound();
             }
-            return Ok(new CategoryViewModel()
+            return Ok(new CategoryListViewModel()
             {
                 UserId= currentCategory.UserId,
                 Title = currentCategory.Title,
                 Description = currentCategory.Description,
                 Id = currentCategory.Id,
-                UserFullName = currentCategory.Creator.FirstName + " " + currentCategory.Creator.LastName
+                Creator = new UserInfoViewModel()
+                {
+                    Id = currentCategory.Creator.Id,
+                    FirstName = currentCategory.Creator.FirstName,
+                    LastName = currentCategory.Creator.LastName,
+                    UserName = currentCategory.Creator.UserName,
+                }
             });
         }
 

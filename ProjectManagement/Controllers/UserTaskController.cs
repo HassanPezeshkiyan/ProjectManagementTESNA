@@ -48,6 +48,7 @@ namespace ProjectManagement.Controllers
                 },
                 User = new UserInfoViewModel()
                 {
+                    Id = e.User.Id,
                     FirstName = e.User.FirstName,
                     LastName = e.User.LastName,
                     UserName = e.User.UserName
@@ -83,6 +84,7 @@ namespace ProjectManagement.Controllers
                 },
                 User = new UserInfoViewModel()
                 {
+                    Id = e.User.Id,
                     FirstName = e.User.FirstName,
                     LastName = e.User.LastName,
                     UserName = e.User.UserName
@@ -95,31 +97,31 @@ namespace ProjectManagement.Controllers
             }).ToList();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreatUserTask([FromBody] UserTaskViewModel vm)
-        {
-            if (vm is null)
-            {
-                return BadRequest();
-            }
-            try
-            {
-                var userTask = new UserTask()
-                {
-                    CreationDate = DateTime.Now,
-                    TaskId = vm.TaskId,
-                    UserId = vm.UserId,
-                    TaskStatus = false,
-                };
-                await db.UserTasks.AddAsync(userTask);
-                await db.SaveChangesAsync();
-                return Ok(userTask);
-            }
-            catch (Exception ex)
-            {
-                return Content(ex.Message);
-            }
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> CreatUserTask([FromBody] UserTaskViewModel vm)
+        //{
+        //    if (vm is null)
+        //    {
+        //        return BadRequest();
+        //    }
+        //    try
+        //    {
+        //        var userTask = new UserTask()
+        //        {
+        //            CreationDate = DateTime.Now,
+        //            TaskId = vm.TaskId,
+        //            UserId = vm.UserId,
+        //            TaskStatus = false,
+        //        };
+        //        await db.UserTasks.AddAsync(userTask);
+        //        await db.SaveChangesAsync();
+        //        return Ok(userTask);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Content(ex.Message);
+        //    }
+        //}
 
         [HttpPut]
         public async Task<IActionResult> EditUserTask([FromBody] UserTaskViewModel vm)
@@ -131,7 +133,7 @@ namespace ProjectManagement.Controllers
             }
             try
             {
-                currentUserTask.TaskStatus = vm.TaskStatus;
+                currentUserTask.TaskStatus = vm.TaskStatus ?? false;
                 currentUserTask.ModifiedDate = DateTime.Now;
                 db.UserTasks.Update(currentUserTask);
                 await db.SaveChangesAsync();

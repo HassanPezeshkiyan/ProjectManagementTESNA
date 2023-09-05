@@ -26,6 +26,6 @@ namespace DB.Entity
         public User Creator { get; set; }
 
 
-        public ICollection<TaskCategory> TaskCategories{ get; set; }
+        public ICollection<TaskCategory>? TaskCategories{ get; set; }
     }
 }

@@ -1,19 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DB.Entity;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProjectManagement.ViewModels
 {
-    public class CategoryViewModel
+    public class CategoryListViewModel
     {
         public int Id { get; set; }
-        [Required]
         public string Title { get; set; }
-        [Required]
         public string Description { get; set; }
 
         /// <summary>
         /// creator of this category
         /// </summary>
-        [Required]
         public int UserId { get; set; }
+        public UserInfoViewModel Creator{ get; set; }
+
     }
 }
