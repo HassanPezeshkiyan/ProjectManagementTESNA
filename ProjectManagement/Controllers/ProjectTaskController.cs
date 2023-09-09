@@ -30,27 +30,21 @@ namespace ProjectManagement.Controllers
                 Description = t.Description,
                 CreationDate = t.CreationDate,
                 TaskDeadline = t.TaskDeadline,
-                TaskCategories = t.TaskCategories.Select(x => new List<TaskCategoryInfoViewModel>()
+                TaskCategories = t.TaskCategories.Select(x => new TaskCategoryInfoViewModel()
                 {
-                    new TaskCategoryInfoViewModel()
-                    {
-                        CategoryId = x.CategoryId,
-                        CategroyTitle = x.Category.Title,
-                        Id = x.Id,
-                        TaskId = x.TaskId,
-                        TaskTitle = x.Task.Title
-                    }
-                }).FirstOrDefault(),
-                TaskUsers = t.TaskUsers.Select(x => new List<UserInfoViewModel>()
+                    CategoryId = x.CategoryId,
+                    CategroyTitle = x.Category.Title,
+                    Id = x.Id,
+                    TaskId = x.TaskId,
+                    TaskTitle = x.Task.Title
+                }).ToList(),
+                TaskUsers = t.TaskUsers.Select(f => new UserInfoViewModel()
                 {
-                    new UserInfoViewModel()
-                    {
-                        Id = x.User.Id,
-                        FirstName = x.User.FirstName,
-                        LastName = x.User.LastName,
-                        UserName = x.User.UserName,
-                    }
-                }).FirstOrDefault()
+                    Id = f.User.Id,
+                    FirstName = f.User.FirstName,
+                    LastName = f.User.LastName,
+                    UserName = f.User.UserName,
+                }).ToList(),
             }).ToList();
         }
 

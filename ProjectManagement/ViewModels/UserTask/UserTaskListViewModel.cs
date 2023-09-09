@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DB.Entity;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProjectManagement.ViewModels;
 public class UserTaskListViewModel

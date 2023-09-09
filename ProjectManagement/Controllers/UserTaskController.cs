@@ -19,42 +19,39 @@ namespace ProjectManagement.Controllers
             this.db = db;
         }
         [HttpGet]
-        public List<UserTaskListViewModel> GetAllUserTasks()
+        public  List<UserTaskListViewModel> GetAllUserTasks()
         {
-            return db.UserTasks.Include(e => e.Task).ThenInclude(e => e.TaskUsers).Include(e => e.Task.TaskCategories).Select(e => new UserTaskListViewModel()
+            return  db.UserTasks.Select(c => new UserTaskListViewModel()
             {
-                Id = e.Id,
-                TaskStatus = e.TaskStatus,
-                CreationDate = e.CreationDate,
-                ModifiedDate = e.ModifiedDate,
+                Id = c.Id,
+                TaskStatus = c.TaskStatus,
+                CreationDate = c.CreationDate,
+                ModifiedDate = c.ModifiedDate,
                 Task = new TaskListViewModel()
                 {
-                    Title = e.Task.Title,
-                    CreationDate = e.Task.CreationDate,
-                    Id = e.Task.Id,
-                    Description = e.Task.Description,
-                    TaskDeadline = e.Task.TaskDeadline,
-                    TaskCategories = e.Task.TaskCategories.Select(x => new List<TaskCategoryInfoViewModel>()
+                    Title = c.Task.Title,
+                    CreationDate = c.Task.CreationDate,
+                    Id = c.Task.Id,
+                    Description = c.Task.Description,
+                    TaskDeadline = c.Task.TaskDeadline,
+                    TaskCategories = c.Task.TaskCategories.Select(x => new TaskCategoryInfoViewModel()
                     {
-                        new TaskCategoryInfoViewModel()
-                        {
-                            CategoryId = x.CategoryId,
-                            CategroyTitle = x.Category.Title,
-                            Id = x.Id,
-                            TaskId = x.TaskId,
-                            TaskTitle = x.Task.Title
-                        }
-                    }).FirstOrDefault(),
-                    TaskUsers = e.Task.TaskUsers.Select(x => new UserInfoViewModel()
-                    {
-                        Id = e.User.Id,
-                        FirstName = e.User.FirstName,
-                        LastName = e.User.LastName,
-                        UserName = e.User.UserName,
+                        CategoryId = x.CategoryId,
+                        CategroyTitle = x.Category.Title,
+                        Id = x.Id,
+                        TaskId = x.TaskId,
+                        TaskTitle = x.Task.Title
                     }).ToList(),
-                },
+                    TaskUsers = c.Task.TaskUsers.Select(f => new UserInfoViewModel()
+                    {
+                        Id = f.User.Id,
+                        FirstName = f.User.FirstName,
+                        LastName = f.User.LastName,
+                        UserName = f.User.UserName,
+                    }).ToList(),
+                }
+            }).ToList().DistinctBy(e => e.Task.Id).ToList();
 
-            }).ToList();
         }
 
         [HttpGet("{id}")]
@@ -73,53 +70,25 @@ namespace ProjectManagement.Controllers
                     Id = e.Task.Id,
                     Description = e.Task.Description,
                     TaskDeadline = e.Task.TaskDeadline,
-                    TaskCategories = e.Task.TaskCategories.Select(x => new List<TaskCategoryInfoViewModel>()
+                    TaskCategories = e.Task.TaskCategories.Select(x => new TaskCategoryInfoViewModel()
                     {
-                        new TaskCategoryInfoViewModel()
-                        {
-                            CategoryId = x.CategoryId,
-                            CategroyTitle = x.Category.Title,
-                            Id = x.Id,
-                            TaskId = x.TaskId,
-                            TaskTitle = x.Task.Title
-                        }
-                    }).FirstOrDefault(),
+                        CategoryId = x.CategoryId,
+                        CategroyTitle = x.Category.Title,
+                        Id = x.Id,
+                        TaskId = x.TaskId,
+                        TaskTitle = x.Task.Title
+                    }).ToList(),
                     TaskUsers = e.Task.TaskUsers.Select(x => new UserInfoViewModel()
                     {
-                        Id = e.User.Id,
-                        FirstName = e.User.FirstName,
-                        LastName = e.User.LastName,
-                        UserName = e.User.UserName,
+                        Id = x.User.Id,
+                        FirstName = x.User.FirstName,
+                        LastName = x.User.LastName,
+                        UserName = x.User.UserName,
                     }).ToList(),
                 },
+
             }).ToList();
         }
-
-        //[HttpPost]
-        //public async Task<IActionResult> CreatUserTask([FromBody] UserTaskViewModel vm)
-        //{
-        //    if (vm is null)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    try
-        //    {
-        //        var userTask = new UserTask()
-        //        {
-        //            CreationDate = DateTime.Now,
-        //            TaskId = vm.TaskId,
-        //            UserId = vm.UserId,
-        //            TaskStatus = false,
-        //        };
-        //        await db.UserTasks.AddAsync(userTask);
-        //        await db.SaveChangesAsync();
-        //        return Ok(userTask);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Content(ex.Message);
-        //    }
-        //}
 
         [HttpPut]
         public async Task<IActionResult> EditUserTask([FromBody] UserTaskViewModel vm)
