@@ -16,6 +16,8 @@ namespace ProjectManagement.ViewModels
         public List<int>? TaskCategoryIds { get; set; }
 
         public List<int>? TaskUserIds { get; set; }
+        public int CreatorId { get; set; }
+        public bool? TaskStatus { get; set; }
 
     }
 }

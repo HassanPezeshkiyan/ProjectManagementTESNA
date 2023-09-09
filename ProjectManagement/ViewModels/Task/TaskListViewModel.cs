@@ -14,6 +14,9 @@ namespace ProjectManagement.ViewModels
         public DateTime CreationDate { get; set; }
         public DateTime? TaskDeadline { get; set; }
 
+        public bool? TaskStatus { get; set; }
+        public string? TaskStatusTitle => this.TaskStatus == false ? "انجام نشده" : "انجام شده";
+
         public List<TaskCategoryInfoViewModel>? TaskCategories { get; set; }
         public List<UserInfoViewModel>? TaskUsers { get; set; }
     }

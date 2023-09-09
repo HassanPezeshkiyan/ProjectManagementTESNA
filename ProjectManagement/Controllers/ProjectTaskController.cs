@@ -105,6 +105,7 @@ namespace ProjectManagement.Controllers
                     Description = vm.Description,
                     CreationDate = DateTime.Now,
                     TaskDeadline = vm.TaskDeadline,
+                    TaskStatus = false
                 };
                 db.Tasks.Add(task);
                 await db.SaveChangesAsync();
@@ -131,7 +132,6 @@ namespace ProjectManagement.Controllers
                         {
                             UserId = item,
                             CreationDate = DateTime.Now,
-                            TaskStatus = false,
                             Task = task
                         };
                         await db.UserTasks.AddAsync(newUserTask);
@@ -192,7 +192,6 @@ namespace ProjectManagement.Controllers
                         {
                             UserId = item,
                             CreationDate = DateTime.Now,
-                            TaskStatus = false,
                             Task = currentTask,
                         };
                         await db.UserTasks.AddAsync(newUserTask);

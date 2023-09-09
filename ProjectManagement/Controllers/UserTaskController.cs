@@ -18,51 +18,49 @@ namespace ProjectManagement.Controllers
         {
             this.db = db;
         }
-        [HttpGet]
-        public  List<UserTaskListViewModel> GetAllUserTasks()
-        {
-            return  db.UserTasks.Select(c => new UserTaskListViewModel()
-            {
-                Id = c.Id,
-                TaskStatus = c.TaskStatus,
-                CreationDate = c.CreationDate,
-                ModifiedDate = c.ModifiedDate,
-                Task = new TaskListViewModel()
-                {
-                    Title = c.Task.Title,
-                    CreationDate = c.Task.CreationDate,
-                    Id = c.Task.Id,
-                    Description = c.Task.Description,
-                    TaskDeadline = c.Task.TaskDeadline,
-                    TaskCategories = c.Task.TaskCategories.Select(x => new TaskCategoryInfoViewModel()
-                    {
-                        CategoryId = x.CategoryId,
-                        CategroyTitle = x.Category.Title,
-                        Id = x.Id,
-                        TaskId = x.TaskId,
-                        TaskTitle = x.Task.Title
-                    }).ToList(),
-                    TaskUsers = c.Task.TaskUsers.Select(f => new UserInfoViewModel()
-                    {
-                        Id = f.User.Id,
-                        FirstName = f.User.FirstName,
-                        LastName = f.User.LastName,
-                        UserName = f.User.UserName,
-                    }).ToList(),
-                }
-            }).ToList().DistinctBy(e => e.Task.Id).ToList();
+        //[HttpGet]
+        //public  List<UserTaskListViewModel> GetAllUserTasks()
+        //{
+        //    return  db.UserTasks.Select(c => new UserTaskListViewModel()
+        //    {
+        //        Id = c.Id,
+        //        TaskStatus = c.TaskStatus,
+        //        CreationDate = c.CreationDate,
+        //        ModifiedDate = c.ModifiedDate,
+        //        Task = new TaskListViewModel()
+        //        {
+        //            Title = c.Task.Title,
+        //            CreationDate = c.Task.CreationDate,
+        //            Id = c.Task.Id,
+        //            Description = c.Task.Description,
+        //            TaskDeadline = c.Task.TaskDeadline,
+        //            TaskCategories = c.Task.TaskCategories.Select(x => new TaskCategoryInfoViewModel()
+        //            {
+        //                CategoryId = x.CategoryId,
+        //                CategroyTitle = x.Category.Title,
+        //                Id = x.Id,
+        //                TaskId = x.TaskId,
+        //                TaskTitle = x.Task.Title
+        //            }).ToList(),
+        //            TaskUsers = c.Task.TaskUsers.Select(f => new UserInfoViewModel()
+        //            {
+        //                Id = f.User.Id,
+        //                FirstName = f.User.FirstName,
+        //                LastName = f.User.LastName,
+        //                UserName = f.User.UserName,
+        //            }).ToList(),
+        //        }
+        //    }).ToList();
 
-        }
+        //}
 
-        [HttpGet("{id}")]
-        public List<UserTaskListViewModel> GetUserTask(int id)
+        [HttpGet("{userId}")]
+        public List<UserTaskListViewModel> GetUserTask(int userId)
         {
-            return db.UserTasks.Include(e => e.Task).ThenInclude(e => e.TaskUsers).Include(e => e.Task.TaskCategories).Where(e => e.UserId == id).Select(e => new UserTaskListViewModel()
+            return db.UserTasks.Where(e => e.UserId == userId).Select(e => new UserTaskListViewModel()
             {
                 Id = e.Id,
-                TaskStatus = e.TaskStatus,
                 CreationDate = e.CreationDate,
-                ModifiedDate = e.ModifiedDate,
                 Task = new TaskListViewModel()
                 {
                     Title = e.Task.Title,
@@ -78,20 +76,21 @@ namespace ProjectManagement.Controllers
                         TaskId = x.TaskId,
                         TaskTitle = x.Task.Title
                     }).ToList(),
-                    TaskUsers = e.Task.TaskUsers.Select(x => new UserInfoViewModel()
+                    TaskUsers = e.Task.TaskUsers.Where(e => e.UserId == userId).Select(x => new UserInfoViewModel()
                     {
                         Id = x.User.Id,
                         FirstName = x.User.FirstName,
                         LastName = x.User.LastName,
                         UserName = x.User.UserName,
                     }).ToList(),
+                    TaskStatus = e.Task.TaskStatus
                 },
 
             }).ToList();
         }
 
         [HttpPut]
-        public async Task<IActionResult> EditUserTask([FromBody] UserTaskViewModel vm)
+        public async Task<IActionResult> ChangeTaskStatus([FromBody] UserTaskViewModel vm)
         {
             var currentUserTask = await db.UserTasks.FindAsync(vm.Id);
             if (currentUserTask is null)
@@ -100,11 +99,20 @@ namespace ProjectManagement.Controllers
             }
             try
             {
-                currentUserTask.TaskStatus = vm.TaskStatus ?? false;
-                currentUserTask.ModifiedDate = DateTime.Now;
-                db.UserTasks.Update(currentUserTask);
-                await db.SaveChangesAsync();
-                return Ok();
+                var currentTask = db.Tasks.Where(e => e.Id == currentUserTask.TaskId).FirstOrDefault();
+                if (currentUserTask is null) 
+                    return BadRequest();
+                currentTask.TaskStatus = true;
+                db.UserTaskLogs.Add(
+                    new UserTaskLog()
+                    {
+                        CreationDate = DateTime.Now,
+                        FunctorId = vm.UserId,
+                        UserTaskId = vm.Id,
+                    });
+                db.Remove(currentUserTask);
+                db.SaveChanges();
+                return Ok("تغییر وضعیت انجام شد");
             }
             catch (Exception ex)
             {

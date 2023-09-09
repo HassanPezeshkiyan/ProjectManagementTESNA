@@ -18,6 +18,7 @@ namespace DB
         public virtual DbSet<TaskCategory> TaskCategories { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserTask> UserTasks { get; set; }
+        public virtual DbSet<UserTaskLog> UserTaskLogs { get; set; }
 
     }
 }

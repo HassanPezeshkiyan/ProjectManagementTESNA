@@ -19,6 +19,7 @@ namespace DB.Entity
         [Required]
         public DateTime CreationDate { get; set; }
         public DateTime? TaskDeadline { get; set; }
+        public bool TaskStatus { get; set; }
 
 
         public ICollection<TaskCategory>? TaskCategories { get; set; }

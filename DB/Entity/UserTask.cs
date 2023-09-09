@@ -20,9 +20,9 @@ namespace DB.Entity
         [Required]
         public int TaskId { get; set; }
         public ProjectTask Task{ get; set; }
-        public bool TaskStatus { get; set; }
 
         public DateTime CreationDate { get; set; }
-        public DateTime? ModifiedDate { get; set; }
+
+        public ICollection<UserTaskLog>? UserTaskLogs { get; set; }
     }
 }
