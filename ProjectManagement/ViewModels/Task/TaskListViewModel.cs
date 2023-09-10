@@ -19,5 +19,6 @@ namespace ProjectManagement.ViewModels
 
         public List<TaskCategoryInfoViewModel>? TaskCategories { get; set; }
         public List<UserInfoViewModel>? TaskUsers { get; set; }
+        public List<UserTaskLogInfoViewModel>? TaskStatusLog { get; set; }
     }
 }

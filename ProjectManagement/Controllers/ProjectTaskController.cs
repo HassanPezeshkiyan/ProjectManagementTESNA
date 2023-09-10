@@ -23,7 +23,8 @@ namespace ProjectManagement.Controllers
         [HttpGet]
         public List<TaskListViewModel> GetTasks()
         {
-            return db.Tasks.Include(e => e.TaskUsers).Include(e => e.TaskCategories).ThenInclude(x => x.Category).Select(t => new TaskListViewModel()
+            var list = db.Tasks.Include(e => e.TaskUsers).ThenInclude(e => e.UserTaskLogs).ThenInclude(e => e.Functor).Include(e => e.TaskCategories).ThenInclude(x => x.Category).ToList();
+            return db.Tasks.Include(e => e.TaskUsers).ThenInclude(e => e.UserTaskLogs).ThenInclude(e => e.Functor).Include(e => e.TaskCategories).ThenInclude(x => x.Category).Select(t => new TaskListViewModel()
             {
                 Id = t.Id,
                 Title = t.Title,
@@ -45,6 +46,21 @@ namespace ProjectManagement.Controllers
                     LastName = f.User.LastName,
                     UserName = f.User.UserName,
                 }).ToList(),
+                TaskStatus = t.TaskStatus,
+                TaskStatusLog = t.TaskUsers.Select(tt => tt.UserTaskLogs.Select(e => new UserTaskLogInfoViewModel()
+                {
+                    Functor = new UserInfoViewModel()
+                    {
+                        FirstName = e.Functor.FirstName,
+                        LastName = e.Functor.LastName,
+                        UserName = e.Functor.UserName,
+                        Id = e.FunctorId,
+                    },
+                    CreationDate = e.CreationDate,
+                    FunctorId = e.FunctorId,
+                    Id = e.Id,
+                    UserTaskId = e.UserTaskId
+                }).FirstOrDefault()).ToList()
             }).ToList();
         }
 

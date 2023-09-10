@@ -110,7 +110,6 @@ namespace ProjectManagement.Controllers
                         FunctorId = vm.UserId,
                         UserTaskId = vm.Id,
                     });
-                db.Remove(currentUserTask);
                 db.SaveChanges();
                 return Ok("تغییر وضعیت انجام شد");
             }
