@@ -76,7 +76,7 @@ namespace ProjectManagement.Controllers
                         TaskId = x.TaskId,
                         TaskTitle = x.Task.Title
                     }).ToList(),
-                    TaskUsers = e.Task.TaskUsers.Where(e => e.UserId == userId).Select(x => new UserInfoViewModel()
+                    TaskUsers = e.Task.TaskUsers.Select(x => new UserInfoViewModel()
                     {
                         Id = x.User.Id,
                         FirstName = x.User.FirstName,
