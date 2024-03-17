@@ -17,7 +17,8 @@ builder.Services.AddControllersWithViews()
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer("server=(localdb)\\MSSQLLocalDB;database=ProjectManagement;Trusted_Connection=true"));
+
+        options.UseSqlServer("data source=.;initial catalog=ProjectManagement;integrated security=true;TrustServerCertificate=True;"));
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
