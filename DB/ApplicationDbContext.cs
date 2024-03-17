@@ -13,6 +13,7 @@ namespace DB
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
+        
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<ProjectTask> Tasks { get; set; }
         public virtual DbSet<TaskCategory> TaskCategories { get; set; }
@@ -20,5 +21,16 @@ namespace DB
         public virtual DbSet<UserTask> UserTasks { get; set; }
         public virtual DbSet<UserTaskLog> UserTaskLogs { get; set; }
 
+        
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+    {
+
+        var connectionString = "server=(localdb)\\MSSQLLocalDB;database=ProjectManagement;Trusted_Connection=true";
+        object p = optionsBuilder.UseSqlServer(connectionString);
+    }
+
+    }
     }
 }
