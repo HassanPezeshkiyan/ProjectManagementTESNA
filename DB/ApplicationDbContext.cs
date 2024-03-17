@@ -10,7 +10,7 @@ namespace DB
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
         public virtual DbSet<Category> Categories { get; set; }
