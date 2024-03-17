@@ -22,15 +22,6 @@ namespace DB
         public virtual DbSet<UserTaskLog> UserTaskLogs { get; set; }
 
         
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-    {
-
-        var connectionString = "server=(localdb)\\MSSQLLocalDB;database=ProjectManagement;Trusted_Connection=true";
-        object p = optionsBuilder.UseSqlServer(connectionString);
-    }
-
-    }
+    
     }
 }
