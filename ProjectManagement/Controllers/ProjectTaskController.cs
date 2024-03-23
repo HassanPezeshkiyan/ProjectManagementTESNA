@@ -80,6 +80,7 @@ namespace ProjectManagement.Controllers
                  CreationDate = currentTask.CreationDate,
                  Description = currentTask.Description,
                  TaskDeadline = currentTask.TaskDeadline,
+                 TaskStatus = currentTask.TaskStatus,
                  TaskCategories = currentTask.TaskCategories.Select(x => new List<TaskCategoryInfoViewModel>()
                     {
                         new TaskCategoryInfoViewModel()
