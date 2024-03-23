@@ -217,6 +217,7 @@ namespace ProjectManagement.Controllers
                 currentTask.Title = vm.Title ?? currentTask.Title;
                 currentTask.Description = vm.Description ?? currentTask.Description;
                 currentTask.TaskDeadline = vm.TaskDeadline ?? currentTask.TaskDeadline;
+                currentTask.TaskStatus = vm.TaskStatus??false;
                 db.Tasks.Update(currentTask);
                 await db.SaveChangesAsync();
                 await db.Database.CommitTransactionAsync();
